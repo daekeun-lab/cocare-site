@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>cocare.kr — 협동돌봄, 함께 키우는 아이들</title>
+  <meta name="description" content="부모와 교사가 함께 만드는 협동돌봄. 율동방과후는 25년 역사의 전국 협동돌봄센터 6호입니다.">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --green: #4a7c59;
+      --green-light: #e8f0eb;
+      --green-mid: #c5d9c9;
+      --brown: #7a5c3a;
+      --cream: #fdf8f2;
+      --text: #2c2c2c;
+      --text-soft: #5a5a5a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      color: var(--text);
+      background: var(--cream);
+      line-height: 1.7;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      background: white;
+      border-bottom: 1px solid var(--green-mid);
+      z-index: 100;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+    .nav-logo {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--green);
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-soft);
+      font-size: 0.9rem;
+    }
+    .nav-links a:hover { color: var(--green); }
+
+    /* HERO */
+    .hero {
+      background: var(--green);
+      color: white;
+      text-align: center;
+      padding: 80px 24px 72px;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      border-radius: 20px;
+      padding: 4px 16px;
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+      letter-spacing: 0.05em;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 20px;
+    }
+    .hero p {
+      font-size: 1.1rem;
+      opacity: 0.88;
+      max-width: 500px;
+      margin: 0 auto 36px;
+    }
+    .hero-cta {
+      display: inline-block;
+      background: white;
+      color: var(--green);
+      padding: 12px 32px;
+      border-radius: 28px;
+      font-weight: 700;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: transform 0.2s;
+    }
+    .hero-cta:hover { transform: translateY(-2px); }
+
+    /* SECTIONS */
+    section { padding: 72px 24px; }
+    .container { max-width: 800px; margin: 0 auto; }
+
+    .section-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--green);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    h2 {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 700;
+      margin-bottom: 20px;
+      line-height: 1.35;
+    }
+    .lead {
+      font-size: 1.05rem;
+      color: var(--text-soft);
+      margin-bottom: 36px;
+    }
+
+    /* WHAT IS */
+    #what { background: white; }
+    .what-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 36px;
+    }
+    .what-card {
+      background: var(--green-light);
+      border-radius: 16px;
+      padding: 28px 24px;
+    }
+    .what-card .icon { font-size: 1.8rem; margin-bottom: 12px; }
+    .what-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; color: var(--green); }
+    .what-card p { font-size: 0.9rem; color: var(--text-soft); }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 36px;
+      font-size: 0.9rem;
+    }
+    .compare-table th {
+      background: var(--green);
+      color: white;
+      padding: 12px 16px;
+      text-align: left;
+    }
+    .compare-table th:first-child { border-radius: 8px 0 0 0; }
+    .compare-table th:last-child { border-radius: 0 8px 0 0; }
+    .compare-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--green-mid);
+    }
+    .compare-table tr:nth-child(even) td { background: var(--green-light); }
+    .compare-table .highlight td { font-weight: 700; color: var(--green); }
+
+    /* ABOUT */
+    #about { background: var(--green-light); }
+    .stats-row {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+    .stat {
+      background: white;
+      border-radius: 16px;
+      padding: 24px 28px;
+      flex: 1;
+      min-width: 120px;
+      text-align: center;
+    }
+    .stat-num {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--green);
+      line-height: 1;
+    }
+    .stat-label { font-size: 0.85rem; color: var(--text-soft); margin-top: 6px; }
+
+    .daily-list {
+      background: white;
+      border-radius: 16px;
+      padding: 28px;
+      margin-top: 24px;
+    }
+    .daily-list h3 { font-size: 1rem; font-weight: 700; margin-bottom: 16px; color: var(--green); }
+    .daily-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--green-light);
+    }
+    .daily-item:last-child { border-bottom: none; }
+    .daily-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 2px; }
+    .daily-item p { font-size: 0.92rem; }
+
+    /* RECRUIT */
+    #recruit { background: white; }
+    .recruit-box {
+      background: var(--green);
+      color: white;
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+    }
+    .recruit-tagline {
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 700;
+      line-height: 1.5;
+      margin-bottom: 28px;
+    }
+    .recruit-tagline .divider {
+      display: block;
+      width: 40px;
+      height: 2px;
+      background: rgba(255,255,255,0.4);
+      margin: 12px auto;
+    }
+    .recruit-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-top: 32px;
+      text-align: left;
+    }
+    .recruit-info-item {
+      background: rgba(255,255,255,0.15);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .recruit-info-item .label {
+      font-size: 0.78rem;
+      opacity: 0.75;
+      margin-bottom: 6px;
+      letter-spacing: 0.06em;
+    }
+    .recruit-info-item .value { font-size: 0.95rem; font-weight: 600; }
+
+    .checklist {
+      list-style: none;
+      margin: 28px 0;
+      text-align: left;
+    }
+    .checklist li {
+      padding: 8px 0;
+      padding-left: 28px;
+      position: relative;
+      font-size: 0.95rem;
+    }
+    .checklist li::before {
+      content: '✦';
+      position: absolute;
+      left: 0;
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* CONTACT */
+    #contact { background: var(--cream); }
+    .contact-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 32px;
+    }
+    .contact-card {
+      background: white;
+      border-radius: 16px;
+      padding: 28px 24px;
+      border: 1px solid var(--green-mid);
+    }
+    .contact-card .icon { font-size: 1.5rem; margin-bottom: 12px; }
+    .contact-card h3 { font-size: 0.85rem; color: var(--text-soft); margin-bottom: 6px; }
+    .contact-card p { font-size: 1rem; font-weight: 600; }
+    .contact-card a { color: var(--green); text-decoration: none; }
+
+    .address-box {
+      background: var(--green-light);
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-top: 16px;
+    }
+    .address-box p { font-size: 0.95rem; color: var(--text-soft); }
+    .address-box strong { color: var(--text); }
+
+    /* FOOTER */
+    footer {
+      background: var(--green);
+      color: rgba(255,255,255,0.75);
+      text-align: center;
+      padding: 32px 24px;
+      font-size: 0.85rem;
+    }
+    footer strong { color: white; }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .recruit-box { padding: 28px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">cocare.kr</a>
+  <ul class="nav-links">
+    <li><a href="#what">협동돌봄이란</a></li>
+    <li><a href="#about">율동방과후</a></li>
+    <li><a href="#recruit">조합원 모집</a></li>
+    <li><a href="#contact">연락처</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">협동돌봄센터 · 율동방과후</div>
+  <h1>놀아도 괜찮아<br>느려도 괜찮아<br>기다려 줄게요</h1>
+  <p>부모와 교사가 함께 조합원이 되어<br>아이들의 방과후를 직접 만들어 가는 곳</p>
+  <a href="#recruit" class="hero-cta">신입 조합원 모집 중</a>
+</section>
+
+<!-- WHAT IS COCARE -->
+<section id="what">
+  <div class="container">
+    <div class="section-label">협동돌봄이란?</div>
+    <h2>우리가 직접 운영하는<br>아이들의 방과후</h2>
+    <p class="lead">협동돌봄은 부모와 교사가 비영리 조합을 만들어 함께 운영하는 초등 방과후 돌봄 시설입니다. 누군가에게 맡기는 것이 아니라, 우리가 함께 만드는 돌봄입니다.</p>
+
+    <div class="what-grid">
+      <div class="what-card">
+        <div class="icon">👨‍👩‍👧</div>
+        <h3>부모는 운영 주체</h3>
+        <p>당번, 마실, 총회를 통해 직접 운영에 참여합니다</p>
+      </div>
+      <div class="what-card">
+        <div class="icon">🤝</div>
+        <h3>교사는 파트너</h3>
+        <p>교사도 동등한 조합원으로 함께 결정합니다</p>
+      </div>
+      <div class="what-card">
+        <div class="icon">🗣️</div>
+        <h3>함께 결정</h3>
+        <p>교육 방향, 프로그램, 운영 방식을 모두가 함께 정합니다</p>
+      </div>
+      <div class="what-card">
+        <div class="icon">🌱</div>
+        <h3>갈등도 교육</h3>
+        <p>아이들이 부딪히고 해결하는 과정 자체가 배움입니다</p>
+      </div>
+    </div>
+
+    <table class="compare-table" style="margin-top: 48px;">
+      <thead>
+        <tr>
+          <th>형태</th>
+          <th>운영 주체</th>
+          <th>특징</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="highlight">
+          <td>협동돌봄센터</td>
+          <td>부모 + 교사</td>
+          <td>우리가 직접 운영</td>
+        </tr>
+        <tr>
+          <td>늘봄학교</td>
+          <td>학교</td>
+          <td>돌봄 + 교육</td>
+        </tr>
+        <tr>
+          <td>지역아동센터</td>
+          <td>센터장</td>
+          <td>복지시설</td>
+        </tr>
+        <tr>
+          <td>다함께돌봄센터</td>
+          <td>지자체</td>
+          <td>사각지대 해소</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ABOUT YULDONG -->
+<section id="about">
+  <div class="container">
+    <div class="section-label">율동방과후 소개</div>
+    <h2>25년을 함께 키워온<br>성남의 협동돌봄</h2>
+    <p class="lead">2025년 아동복지법 개정으로 협동돌봄이 법제화되었습니다. 율동방과후는 전국에서 6번째로 협동돌봄센터 설립 신고를 완료했습니다.</p>
+
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-num">25년</div>
+        <div class="stat-label">운영 역사</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">6호</div>
+        <div class="stat-label">전국 협동돌봄센터</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">18명</div>
+        <div class="stat-label">현재 아이들</div>
+      </div>
+    </div>
+
+    <div class="daily-list">
+      <h3>율동방과후의 하루</h3>
+      <div class="daily-item">
+        <div class="daily-icon">🌿</div>
+        <p>하교 후부터 저녁 7시까지 함께합니다</p>
+      </div>
+      <div class="daily-item">
+        <div class="daily-icon">⛰️</div>
+        <p>매일 땅을 밟고, 산에 오르고, 나들이 합니다</p>
+      </div>
+      <div class="daily-item">
+        <div class="daily-icon">🗳️</div>
+        <p>아이들이 스스로 결정하는 회의를 합니다</p>
+      </div>
+      <div class="daily-item">
+        <div class="daily-icon">☀️</div>
+        <p>방학에도 온종일 함께합니다 (오전 9시~오후 7시)</p>
+      </div>
+      <div class="daily-item">
+        <div class="daily-icon">👪</div>
+        <p>부모도 조합원으로 함께 운영합니다</p>
+      </div>
+    </div>
+
+    <div style="background: white; border-radius: 16px; padding: 28px; margin-top: 20px; border-left: 4px solid var(--green);">
+      <p style="font-size: 1rem; line-height: 1.8; color: var(--text-soft);">
+        "공동육아가 해온 일을 나라가 인정해 주었습니다.<br>
+        율동은 전국 6번째로 이름을 올렸습니다.<br>
+        <strong style="color: var(--text);">달라지는 건 이름과 서류, 변하지 않는 건 우리가 함께 아이를 키운다는 것.</strong>"
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- RECRUIT -->
+<section id="recruit">
+  <div class="container">
+    <div class="section-label">신입 조합원 모집</div>
+    <h2>함께 키울 가족을<br>기다리고 있어요</h2>
+
+    <div class="recruit-box">
+      <div class="recruit-tagline">
+        놀아도 괜찮아
+        <span class="divider"></span>
+        느려도 괜찮아
+        <span class="divider"></span>
+        기다려 줄게요.
+      </div>
+
+      <ul class="checklist">
+        <li>하교 후부터 저녁 7시까지 함께합니다</li>
+        <li>매일 땅을 밟고, 산에 오르고, 나들이 합니다</li>
+        <li>아이들이 스스로 결정하는 회의를 합니다</li>
+        <li>방학에도 온종일 함께합니다 (오전 9시~오후 7시)</li>
+        <li>부모도 조합원으로 함께 운영합니다</li>
+      </ul>
+
+      <div class="recruit-info">
+        <div class="recruit-info-item">
+          <div class="label">모집 대상</div>
+          <div class="value">예비초등 1학년<br>~ 초등 3학년 가족</div>
+        </div>
+        <div class="recruit-info-item">
+          <div class="label">문의</div>
+          <div class="value">010-8990-1895<br>(홍보소위 연두)</div>
+        </div>
+        <div class="recruit-info-item">
+          <div class="label">카페</div>
+          <div class="value">cafe.naver.com/<br>ydafterschool</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="section-label">연락처</div>
+    <h2>찾아오세요</h2>
+    <p class="lead">궁금한 것이 있으면 언제든지 연락 주세요.</p>
+
+    <div class="contact-cards">
+      <div class="contact-card">
+        <div class="icon">📞</div>
+        <h3>전화 문의</h3>
+        <p>010-8990-1895</p>
+        <p style="font-size:0.85rem; color: var(--text-soft); margin-top: 4px;">홍보소위 연두</p>
+      </div>
+      <div class="contact-card">
+        <div class="icon">💬</div>
+        <h3>네이버 카페</h3>
+        <p><a href="https://cafe.naver.com/ydafterschool" target="_blank">cafe.naver.com/ydafterschool</a></p>
+      </div>
+    </div>
+
+    <div class="address-box">
+      <p style="margin-bottom: 6px; font-size: 0.8rem; letter-spacing: 0.06em; color: var(--green); font-weight: 700;">오시는 길</p>
+      <p><strong>성남시 분당구 발이봉남로 12번길 21 1층</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <strong>cocare.kr</strong> · 율동방과후 협동돌봄센터<br>
+  <span style="font-size:0.8rem; margin-top: 6px; display:block;">성남시 분당구 · 전국 협동돌봄센터 6호</span>
+</footer>
+
+</body>
+</html>
