@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>활동 — cocare.kr</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .activity-section { margin-bottom: 48px; }
+    .activity-section h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--green);
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--green-mid);
+    }
+
+    /* 사진 그리드 */
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .photo-placeholder {
+      aspect-ratio: 4/3;
+      background: var(--green-light);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--green);
+      font-size: 0.85rem;
+      border: 2px dashed var(--green-mid);
+    }
+    .photo-placeholder .icon { font-size: 2rem; }
+
+    /* 활동 카드 */
+    .activity-card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px 28px;
+      border: 1px solid var(--green-mid);
+      margin-bottom: 12px;
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    .activity-date {
+      flex-shrink: 0;
+      text-align: center;
+      background: var(--green-light);
+      border-radius: 10px;
+      padding: 10px 14px;
+      min-width: 64px;
+    }
+    .activity-date .month {
+      font-size: 0.75rem;
+      color: var(--green);
+      font-weight: 700;
+    }
+    .activity-date .day {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--green);
+      line-height: 1.1;
+    }
+    .activity-content h4 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+    .activity-content p { font-size: 0.9rem; color: var(--text-soft); }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--text-soft);
+      background: var(--green-light);
+      border-radius: 16px;
+    }
+    .empty-state .icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .empty-state p { font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">cocare.kr</a>
+  <ul class="nav-links">
+    <li><a href="index.html">소개</a></li>
+    <li><a href="news.html">소식</a></li>
+    <li><a href="activities.html" class="active">활동</a></li>
+    <li><a href="resources.html">자료실</a></li>
+    <li><a href="index.html#recruit">조합원 모집</a></li>
+  </ul>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <div class="section-label">Activities</div>
+    <h1>활동 기록</h1>
+  </div>
+</div>
+
+<section>
+  <div class="container">
+
+    <!-- 사진 갤러리 -->
+    <div class="activity-section">
+      <h3>사진 갤러리</h3>
+      <div class="empty-state">
+        <div class="icon">📷</div>
+        <p>사진을 공유해주시면 여기에 추가할게요</p>
+      </div>
+    </div>
+
+    <!-- 활동 기록 -->
+    <div class="activity-section">
+      <h3>최근 활동</h3>
+
+      <div class="activity-card">
+        <div class="activity-date">
+          <div class="month">2026.04</div>
+          <div class="day">봄</div>
+        </div>
+        <div class="activity-content">
+          <h4>봄 나들이</h4>
+          <p>아이들과 함께 근처 산과 공원을 다니며 봄을 맞이했습니다.</p>
+        </div>
+      </div>
+
+      <div class="activity-card">
+        <div class="activity-date">
+          <div class="month">2026.03</div>
+          <div class="day">총회</div>
+        </div>
+        <div class="activity-content">
+          <h4>2026년 정기 총회</h4>
+          <p>조합원 전원이 모여 올해 운영 방향과 교육 프로그램을 함께 결정했습니다.</p>
+        </div>
+      </div>
+
+      <div class="activity-card">
+        <div class="activity-date">
+          <div class="month">2025.12</div>
+          <div class="day">설립</div>
+        </div>
+        <div class="activity-content">
+          <h4>협동돌봄센터 설립 신고 완료</h4>
+          <p>전국 6호 협동돌봄센터로 공식 등록되었습니다. 25년의 역사가 새 이름을 얻었습니다.</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <ul class="footer-links">
+    <li><a href="index.html">소개</a></li>
+    <li><a href="news.html">소식</a></li>
+    <li><a href="activities.html">활동</a></li>
+    <li><a href="resources.html">자료실</a></li>
+  </ul>
+  <strong>cocare.kr</strong> · 율동방과후 협동돌봄센터<br>
+  <span style="font-size:0.8rem; margin-top: 6px; display:block;">성남시 분당구 · 전국 협동돌봄센터 6호</span>
+</footer>
+
+</body>
+</html>

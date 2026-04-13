@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>율동방과후 신입 조합원 모집</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+    }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #e8e0d0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .scale-wrapper {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform-origin: center center;
+    }
+
+    .poster {
+      width: 595px;
+      background: #fffdf7;
+      position: relative;
+      overflow: visible;
+      box-shadow: 0 8px 48px rgba(0,0,0,0.18);
+    }
+
+    /* ── 상단 일러스트 히어로 영역 ── */
+    .poster-hero {
+      width: 100%;
+      height: 210px;
+      position: relative;
+      overflow: hidden;
+    }
+    .poster-hero svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 28px 44px;
+    }
+
+    /* ── 본문 영역 ── */
+    .content {
+      padding: 22px 44px 44px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 태그 */
+    .tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.85);
+      color: #2d5a35;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+      width: fit-content;
+      border: 1px solid rgba(255,255,255,0.6);
+    }
+
+    /* 헤드라인 */
+    .headline p {
+      font-size: 36px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    }
+    .headline p.accent {
+      color: #d4f0da;
+    }
+
+    /* 구분선 */
+    .divider {
+      width: 100%;
+      height: 1.5px;
+      background: linear-gradient(to right, #6a9e72, #c8e0cb, transparent);
+      margin: 14px 0;
+    }
+
+    /* 메인 타이틀 */
+    .main-title { text-align: center; margin-bottom: 4px; }
+    .main-title h1 {
+      font-size: 24px;
+      font-weight: 900;
+      color: #2d5a35;
+    }
+    .main-title h2 {
+      font-size: 14px;
+      font-weight: 400;
+      color: #666;
+      margin-top: 3px;
+      letter-spacing: 0.05em;
+    }
+
+    /* 소개 문구 */
+    .intro {
+      background: #f0f7f1;
+      border-left: 4px solid #6a9e72;
+      padding: 11px 13px;
+      margin: 13px 0;
+      border-radius: 0 7px 7px 0;
+    }
+    .intro p {
+      font-size: 12.5px;
+      color: #3a3a3a;
+      line-height: 1.8;
+    }
+    .intro p strong { color: #2d5a35; font-weight: 700; }
+
+    /* 섹션 타이틀 */
+    .section-title {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #6a9e72;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #d0e8d3;
+    }
+
+    /* 특징 리스트 */
+    .feature-list { list-style: none; margin-bottom: 13px; }
+    .feature-list li {
+      font-size: 12.5px;
+      color: #3a3a3a;
+      line-height: 1.5;
+      padding: 5px 0 5px 22px;
+      position: relative;
+      border-bottom: 1px dashed #ebebeb;
+    }
+    .feature-list li:last-child { border-bottom: none; }
+    .feature-list li::before {
+      content: '✦';
+      position: absolute;
+      left: 0;
+      color: #6a9e72;
+      font-size: 9px;
+      top: 7px;
+    }
+
+    /* 모집 대상 박스 */
+    .target-box {
+      background: #2d5a35;
+      color: white;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .target-box .label { font-size: 10px; font-weight: 500; opacity: 0.75; letter-spacing: 0.08em; }
+    .target-box .value { font-size: 14px; font-weight: 700; margin-top: 2px; }
+
+    /* 정보 그리드 */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      margin-bottom: 14px;
+    }
+    .info-item {
+      background: #f8f8f4;
+      border-radius: 7px;
+      padding: 9px 11px;
+    }
+    .info-item .info-label {
+      font-size: 9.5px;
+      color: #999;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      margin-bottom: 3px;
+    }
+    .info-item .info-value {
+      font-size: 11.5px;
+      color: #2d2d2d;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    /* 하단 바 */
+    .bottom-bar {
+      border-top: 1px solid #e0e0d8;
+      padding-top: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .bottom-bar .brand { font-size: 11px; font-weight: 700; color: #2d5a35; }
+    .bottom-bar .brand span {
+      font-weight: 300;
+      color: #999;
+      font-size: 9.5px;
+      display: block;
+      margin-top: 2px;
+    }
+    .bottom-bar .badge {
+      background: #f0f7f1;
+      border: 1px solid #c8e0cb;
+      border-radius: 20px;
+      padding: 4px 11px;
+      font-size: 9.5px;
+      color: #2d5a35;
+      font-weight: 600;
+    }
+
+    @media print {
+      body { background: white; }
+      .poster { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="scale-wrapper" id="scaleWrapper">
+    <div class="poster">
+
+      <!-- 상단 일러스트 히어로 -->
+      <div class="poster-hero">
+        <svg viewBox="0 0 595 210" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <!-- 하늘 배경 -->
+          <defs>
+            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#a8d8b0"/>
+              <stop offset="100%" stop-color="#d4f0da"/>
+            </linearGradient>
+            <linearGradient id="hill1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#5a9e65"/>
+              <stop offset="100%" stop-color="#4a8e55"/>
+            </linearGradient>
+            <linearGradient id="hill2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#6ab076"/>
+              <stop offset="100%" stop-color="#5a9e65"/>
+            </linearGradient>
+          </defs>
+
+          <!-- 하늘 -->
+          <rect width="595" height="210" fill="url(#sky)"/>
+
+          <!-- 구름들 -->
+          <ellipse cx="80" cy="38" rx="38" ry="16" fill="white" opacity="0.7"/>
+          <ellipse cx="110" cy="32" rx="28" ry="14" fill="white" opacity="0.7"/>
+          <ellipse cx="55" cy="40" rx="22" ry="12" fill="white" opacity="0.6"/>
+
+          <ellipse cx="460" cy="28" rx="42" ry="16" fill="white" opacity="0.6"/>
+          <ellipse cx="490" cy="22" rx="30" ry="13" fill="white" opacity="0.6"/>
+          <ellipse cx="435" cy="30" rx="20" ry="11" fill="white" opacity="0.5"/>
+
+          <!-- 태양 -->
+          <circle cx="530" cy="55" r="22" fill="#ffe066" opacity="0.85"/>
+          <circle cx="530" cy="55" r="16" fill="#ffd033" opacity="0.9"/>
+
+          <!-- 뒷 언덕 -->
+          <path d="M0 145 Q120 80 250 130 Q380 80 595 125 L595 210 L0 210 Z" fill="url(#hill2)" opacity="0.6"/>
+
+          <!-- 앞 언덕 -->
+          <path d="M0 165 Q150 115 300 155 Q430 110 595 150 L595 210 L0 210 Z" fill="url(#hill1)"/>
+
+          <!-- 왼쪽 나무 -->
+          <!-- 나무 기둥 -->
+          <rect x="62" y="138" width="8" height="35" fill="#7a5c3a" rx="2"/>
+          <!-- 나무 잎 -->
+          <circle cx="66" cy="120" r="22" fill="#3d8b47" opacity="0.9"/>
+          <circle cx="52" cy="130" r="16" fill="#4a9e55" opacity="0.85"/>
+          <circle cx="80" cy="128" r="16" fill="#4a9e55" opacity="0.85"/>
+          <circle cx="66" cy="108" r="16" fill="#5aae65" opacity="0.8"/>
+
+          <!-- 오른쪽 나무 -->
+          <rect x="498" y="132" width="9" height="38" fill="#7a5c3a" rx="2"/>
+          <circle cx="502" cy="113" r="24" fill="#3d8b47" opacity="0.9"/>
+          <circle cx="488" cy="124" r="17" fill="#4a9e55" opacity="0.85"/>
+          <circle cx="518" cy="122" r="17" fill="#4a9e55" opacity="0.85"/>
+          <circle cx="502" cy="100" r="17" fill="#5aae65" opacity="0.8"/>
+
+          <!-- 중간 작은 나무 -->
+          <rect x="388" y="148" width="6" height="26" fill="#7a5c3a" rx="1"/>
+          <circle cx="391" cy="136" r="15" fill="#4a9e55" opacity="0.85"/>
+          <circle cx="380" cy="143" r="11" fill="#5aae65" opacity="0.8"/>
+          <circle cx="402" cy="141" r="11" fill="#5aae65" opacity="0.8"/>
+
+          <!-- 아이들 실루엣 -->
+          <!-- 아이1 (달리는) -->
+          <g transform="translate(160, 148)">
+            <circle cx="0" cy="-22" r="8" fill="#f4a261" opacity="0.95"/>
+            <rect x="-5" y="-14" width="10" height="16" rx="3" fill="#e07b39" opacity="0.9"/>
+            <!-- 팔 -->
+            <line x1="-5" y1="-10" x2="-14" y2="-4" stroke="#e07b39" stroke-width="4" stroke-linecap="round"/>
+            <line x1="5" y1="-10" x2="13" y2="-16" stroke="#e07b39" stroke-width="4" stroke-linecap="round"/>
+            <!-- 다리 -->
+            <line x1="-2" y1="2" x2="-8" y2="14" stroke="#5a7abf" stroke-width="4" stroke-linecap="round"/>
+            <line x1="2" y1="2" x2="10" y2="10" stroke="#5a7abf" stroke-width="4" stroke-linecap="round"/>
+          </g>
+
+          <!-- 아이2 (손잡은) -->
+          <g transform="translate(245, 152)">
+            <circle cx="0" cy="-20" r="7.5" fill="#f4c88a" opacity="0.95"/>
+            <rect x="-5" y="-13" width="10" height="14" rx="3" fill="#e88fcf" opacity="0.9"/>
+            <line x1="-5" y1="-8" x2="-15" y2="-5" stroke="#e88fcf" stroke-width="4" stroke-linecap="round"/>
+            <line x1="5" y1="-8" x2="15" y2="-5" stroke="#e88fcf" stroke-width="4" stroke-linecap="round"/>
+            <line x1="-2" y1="1" x2="-5" y2="13" stroke="#7a6abf" stroke-width="4" stroke-linecap="round"/>
+            <line x1="2" y1="1" x2="6" y2="13" stroke="#7a6abf" stroke-width="4" stroke-linecap="round"/>
+          </g>
+
+          <!-- 아이3 -->
+          <g transform="translate(310, 150)">
+            <circle cx="0" cy="-21" r="8" fill="#e8a87c" opacity="0.95"/>
+            <rect x="-5" y="-13" width="10" height="15" rx="3" fill="#6aabe0" opacity="0.9"/>
+            <line x1="-5" y1="-8" x2="-16" y2="-5" stroke="#6aabe0" stroke-width="4" stroke-linecap="round"/>
+            <line x1="5" y1="-8" x2="14" y2="-12" stroke="#6aabe0" stroke-width="4" stroke-linecap="round"/>
+            <line x1="-2" y1="2" x2="-6" y2="14" stroke="#4a7abf" stroke-width="4" stroke-linecap="round"/>
+            <line x1="2" y1="2" x2="7" y2="12" stroke="#4a7abf" stroke-width="4" stroke-linecap="round"/>
+          </g>
+
+          <!-- 아이4 (앉아서 놀기) -->
+          <g transform="translate(210, 165)">
+            <circle cx="0" cy="-16" r="7" fill="#f4a261" opacity="0.95"/>
+            <path d="M-6,-9 Q0,5 6,-9" fill="#e07b50" opacity="0.9"/>
+            <line x1="-6" y1="-6" x2="-14" y2="2" stroke="#e07b50" stroke-width="3.5" stroke-linecap="round"/>
+            <line x1="6" y1="-6" x2="14" y2="0" stroke="#e07b50" stroke-width="3.5" stroke-linecap="round"/>
+          </g>
+
+          <!-- 풀잎들 -->
+          <ellipse cx="140" cy="175" rx="12" ry="5" fill="#4aae5a" opacity="0.6"/>
+          <ellipse cx="360" cy="172" rx="10" ry="4" fill="#4aae5a" opacity="0.6"/>
+          <ellipse cx="430" cy="176" rx="8" ry="3" fill="#4aae5a" opacity="0.5"/>
+
+          <!-- 하단 어두운 그라데이션 (텍스트 가독성) -->
+          <defs>
+            <linearGradient id="fadeBottom" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="transparent"/>
+              <stop offset="100%" stop-color="rgba(20,60,25,0.45)"/>
+            </linearGradient>
+          </defs>
+          <rect width="595" height="210" fill="url(#fadeBottom)"/>
+        </svg>
+
+        <!-- 헤드라인 오버레이 -->
+        <div class="hero-overlay">
+          <div class="tag">율동방과후 협동돌봄센터</div>
+          <div class="headline">
+            <p>"10년 후에도...</p>
+            <p>책상에 앉아서</p>
+            <p class="accent">일할까요?"</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 본문 -->
+      <div class="content">
+
+        <div class="divider"></div>
+
+        <div class="main-title">
+          <h1>최고의 창의교육 = 놀이</h1>
+          <h2>정답만 찾는 교육은 끝났습니다, AI 시대 창의적 기획능력을 길러야 합니다.</h2>
+        </div>
+
+        <div class="intro">
+          <p>
+            아이들이 스스로 놀이를 기획하고 실행할 때<br>
+            <strong>폭발적으로 뇌가 성장합니다!</strong>
+          </p>
+        </div>
+
+        <div class="section-title">이런 걸 해요</div>
+        <ul class="feature-list">
+          <li>가게 사장님도 되어보고</li>
+          <li>방학 캠프 프로그램도 직접 기획하며</li>
+          <li>학년별 활동도 스스로 운영해보는 곳</li>
+        </ul>
+
+        <div class="section-title">율동방과후는</div>
+        <div class="target-box">
+          <div>
+            <div class="label" style="font-size:11px; line-height:1.9; opacity:1;">
+              무엇을 상상하든, 그 이상을 실현해보는 곳<br>
+              주입식 교육을 넘어,<br>
+              아이들의 무한한 가능성을 깨우는 곳
+            </div>
+          </div>
+          <div style="font-size: 24px; opacity: 0.5;">✨</div>
+        </div>
+
+        <div class="section-title">찾아오세요</div>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">대상</div>
+            <div class="info-value">초등 1 - 3학년</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">문의</div>
+            <div class="info-value">QR 코드 또는<br>010-8990-1895</div>
+          </div>
+          <div class="info-item" style="grid-column: 1 / -1;">
+            <div class="info-label">위치</div>
+            <div class="info-value">분당구 발이봉남로 12-21</div>
+          </div>
+        </div>
+
+        <div class="bottom-bar">
+          <div class="brand">
+            율동방과후 협동돌봄센터
+            <span>공동육아 · 2001 ~</span>
+          </div>
+          <div class="badge">전국 협동돌봄센터 6호</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const POSTER_W = 595;
+
+    function scalePoster() {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const padding = 24;
+
+      const poster = document.querySelector('.poster');
+      const actualH = poster.offsetHeight;
+
+      const scaleX = (vw - padding * 2) / POSTER_W;
+      const scaleY = (vh - padding * 2) / actualH;
+      const scale = Math.min(scaleX, scaleY);
+
+      const wrapper = document.getElementById('scaleWrapper');
+      wrapper.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    }
+
+    document.fonts.ready.then(() => scalePoster());
+    window.addEventListener('resize', scalePoster);
+  </script>
+</body>
+</html>

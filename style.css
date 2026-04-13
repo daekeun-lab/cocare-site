@@ -1,0 +1,127 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --green: #4a7c59;
+  --green-light: #e8f0eb;
+  --green-mid: #c5d9c9;
+  --brown: #7a5c3a;
+  --cream: #fdf8f2;
+  --text: #2c2c2c;
+  --text-soft: #5a5a5a;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  color: var(--text);
+  background: var(--cream);
+  line-height: 1.7;
+}
+
+/* NAV */
+nav {
+  position: sticky;
+  top: 0;
+  background: white;
+  border-bottom: 1px solid var(--green-mid);
+  z-index: 100;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+}
+.nav-logo {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--green);
+  text-decoration: none;
+}
+.nav-links {
+  display: flex;
+  gap: 24px;
+  list-style: none;
+}
+.nav-links a {
+  text-decoration: none;
+  color: var(--text-soft);
+  font-size: 0.9rem;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--green); font-weight: 600; }
+
+/* PAGE HEADER */
+.page-header {
+  background: var(--green);
+  color: white;
+  padding: 48px 24px 40px;
+}
+.page-header .section-label {
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 10px;
+}
+.page-header h1 {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 700;
+}
+
+/* SECTIONS */
+section { padding: 56px 24px; }
+.container { max-width: 800px; margin: 0 auto; }
+
+.section-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--green);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+h2 {
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.35;
+}
+.lead {
+  font-size: 1.05rem;
+  color: var(--text-soft);
+  margin-bottom: 36px;
+}
+
+/* CARDS */
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 28px;
+  border: 1px solid var(--green-mid);
+}
+.card + .card { margin-top: 16px; }
+
+/* FOOTER */
+footer {
+  background: var(--green);
+  color: rgba(255,255,255,0.75);
+  text-align: center;
+  padding: 32px 24px;
+  font-size: 0.85rem;
+}
+footer strong { color: white; }
+footer .footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  list-style: none;
+  margin-bottom: 16px;
+}
+footer .footer-links a {
+  color: rgba(255,255,255,0.75);
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+footer .footer-links a:hover { color: white; }
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .nav-links { display: none; }
+}

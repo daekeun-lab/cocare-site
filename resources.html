@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>자료실 — cocare.kr</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .resource-section { margin-bottom: 48px; }
+    .resource-section h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--green);
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--green-mid);
+    }
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+    }
+    .resource-card {
+      background: white;
+      border-radius: 14px;
+      padding: 22px;
+      border: 1px solid var(--green-mid);
+      text-decoration: none;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .resource-card:hover {
+      border-color: var(--green);
+      transform: translateY(-2px);
+    }
+    .resource-card .file-icon {
+      font-size: 2rem;
+    }
+    .resource-card .file-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+    .resource-card .file-meta {
+      font-size: 0.78rem;
+      color: var(--text-soft);
+    }
+    .resource-card .file-tag {
+      font-size: 0.72rem;
+      background: var(--green-light);
+      color: var(--green);
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+      width: fit-content;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">cocare.kr</a>
+  <ul class="nav-links">
+    <li><a href="index.html">소개</a></li>
+    <li><a href="news.html">소식</a></li>
+    <li><a href="activities.html">활동</a></li>
+    <li><a href="resources.html" class="active">자료실</a></li>
+    <li><a href="index.html#recruit">조합원 모집</a></li>
+  </ul>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <div class="section-label">Resources</div>
+    <h1>자료실</h1>
+  </div>
+</div>
+
+<section>
+  <div class="container">
+
+    <!-- 홍보물 -->
+    <div class="resource-section">
+      <h3>홍보물</h3>
+      <div class="resource-grid">
+
+        <a href="files/홍보물/poster.html" target="_blank" class="resource-card">
+          <div class="file-icon">🖼️</div>
+          <div class="file-tag">HTML 포스터</div>
+          <div class="file-name">신입 조합원 모집 포스터</div>
+          <div class="file-meta">2026.04 · 최신본</div>
+        </a>
+
+        <a href="files/홍보물/poster_v1.html" target="_blank" class="resource-card">
+          <div class="file-icon">🖼️</div>
+          <div class="file-tag">HTML 포스터</div>
+          <div class="file-name">모집 포스터 v1</div>
+          <div class="file-meta">신입조합원 모집 버전</div>
+        </a>
+
+        <a href="files/홍보물/poster_v2.html" target="_blank" class="resource-card">
+          <div class="file-icon">🖼️</div>
+          <div class="file-tag">HTML 포스터</div>
+          <div class="file-name">창의교육 포스터 v2</div>
+          <div class="file-meta">창의교육 텍스트 버전</div>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- 소개 자료 -->
+    <div class="resource-section">
+      <h3>소개 자료</h3>
+      <div class="resource-grid">
+
+        <div class="resource-card" style="cursor: default; opacity: 0.6;">
+          <div class="file-icon">📊</div>
+          <div class="file-tag">준비중</div>
+          <div class="file-name">율동방과후 소개 PPT</div>
+          <div class="file-meta">준비 중입니다</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 문서 -->
+    <div class="resource-section">
+      <h3>문서</h3>
+      <div class="resource-grid">
+
+        <div class="resource-card" style="cursor: default; opacity: 0.6;">
+          <div class="file-icon">📄</div>
+          <div class="file-tag">준비중</div>
+          <div class="file-name">율동방과후 기본 정보</div>
+          <div class="file-meta">준비 중입니다</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <ul class="footer-links">
+    <li><a href="index.html">소개</a></li>
+    <li><a href="news.html">소식</a></li>
+    <li><a href="activities.html">활동</a></li>
+    <li><a href="resources.html">자료실</a></li>
+  </ul>
+  <strong>cocare.kr</strong> · 율동방과후 협동돌봄센터<br>
+  <span style="font-size:0.8rem; margin-top: 6px; display:block;">성남시 분당구 · 전국 협동돌봄센터 6호</span>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>율동방과후 신입 조합원 모집</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+    }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #f0ebe0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* 스케일 컨테이너 — 중앙 고정 */
+    .scale-wrapper {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform-origin: center center;
+      /* JS에서 translate + scale 적용 */
+    }
+
+    /* 고정 너비, 높이는 내용에 맞게 자동 */
+    .poster {
+      width: 595px;
+      background: #fffdf7;
+      padding: 52px 48px;
+      position: relative;
+      overflow: visible;
+      box-shadow: 0 6px 40px rgba(0,0,0,0.15);
+    }
+
+    .poster::before {
+      content: '';
+      position: absolute;
+      top: -70px; right: -70px;
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      background: rgba(255, 200, 100, 0.13);
+      z-index: 0;
+    }
+    .poster::after {
+      content: '';
+      position: absolute;
+      bottom: -90px; left: -90px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: rgba(120, 190, 140, 0.11);
+      z-index: 0;
+    }
+
+    .content { position: relative; z-index: 1; display: flex; flex-direction: column; }
+
+    .tag {
+      display: inline-block;
+      background: #6a9e72;
+      color: white;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+
+    .headline { margin-bottom: 8px; }
+    .headline p {
+      font-size: 38px;
+      font-weight: 900;
+      color: #2d2d2d;
+      line-height: 1.3;
+      letter-spacing: -0.02em;
+    }
+    .headline p.accent { color: #6a9e72; }
+
+    .divider {
+      width: 100%;
+      height: 1.5px;
+      background: linear-gradient(to right, #6a9e72, #c8e0cb, transparent);
+      margin: 14px 0;
+    }
+
+    .main-title { text-align: center; margin-bottom: 4px; }
+    .main-title h1 {
+      font-size: 26px;
+      font-weight: 900;
+      color: #2d5a35;
+      letter-spacing: -0.01em;
+    }
+    .main-title h2 {
+      font-size: 15px;
+      font-weight: 400;
+      color: #666;
+      margin-top: 3px;
+      letter-spacing: 0.05em;
+    }
+
+    .intro {
+      background: #f0f7f1;
+      border-left: 4px solid #6a9e72;
+      padding: 12px 14px;
+      margin: 14px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .intro p {
+      font-size: 13px;
+      color: #3a3a3a;
+      line-height: 1.8;
+    }
+    .intro p strong { color: #2d5a35; font-weight: 700; }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #6a9e72;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #d0e8d3;
+    }
+
+    .feature-list { list-style: none; margin-bottom: 14px; }
+    .feature-list li {
+      font-size: 13px;
+      color: #3a3a3a;
+      line-height: 1.5;
+      padding: 6px 0 6px 24px;
+      position: relative;
+      border-bottom: 1px dashed #ebebeb;
+    }
+    .feature-list li:last-child { border-bottom: none; }
+    .feature-list li::before {
+      content: '✦';
+      position: absolute;
+      left: 0;
+      color: #6a9e72;
+      font-size: 10px;
+      top: 8px;
+    }
+
+    .target-box {
+      background: #2d5a35;
+      color: white;
+      border-radius: 10px;
+      padding: 13px 18px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .target-box .label { font-size: 11px; font-weight: 500; opacity: 0.75; letter-spacing: 0.08em; }
+    .target-box .value { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; margin-top: 2px; }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .info-item {
+      background: #f8f8f4;
+      border-radius: 7px;
+      padding: 10px 12px;
+    }
+    .info-item .info-label {
+      font-size: 10px;
+      color: #999;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      margin-bottom: 4px;
+    }
+    .info-item .info-value {
+      font-size: 12px;
+      color: #2d2d2d;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    .bottom-bar {
+      border-top: 1px solid #e0e0d8;
+      padding-top: 12px;
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .bottom-bar .brand { font-size: 12px; font-weight: 700; color: #2d5a35; }
+    .bottom-bar .brand span {
+      font-weight: 300;
+      color: #999;
+      font-size: 10px;
+      display: block;
+      margin-top: 2px;
+    }
+    .bottom-bar .badge {
+      background: #f0f7f1;
+      border: 1px solid #c8e0cb;
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 10px;
+      color: #2d5a35;
+      font-weight: 600;
+    }
+
+    @media print {
+      body { background: white; }
+      .poster { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="scale-wrapper" id="scaleWrapper">
+    <div class="poster">
+      <div class="content">
+
+        <div class="tag">공동육아 방과후</div>
+
+        <div class="headline">
+          <p>놀아도 괜찮아</p>
+          <p>느려도 괜찮아</p>
+          <p class="accent">기다려 줄게요.</p>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="main-title">
+          <h1>율동방과후</h1>
+          <h2>신입 조합원을 모집합니다</h2>
+        </div>
+
+        <div class="intro">
+          <p>
+            부모와 교사가 함께 조합원이 되어<br>
+            아이들의 방과후를 직접 만들어 가는 곳,<br>
+            <strong>25년 역사의 전국 협동돌봄센터 6호</strong>입니다.
+          </p>
+        </div>
+
+        <div class="section-title">이런 곳이에요</div>
+        <ul class="feature-list">
+          <li>하교 후부터 저녁 7시까지 함께합니다</li>
+          <li>매일 땅을 밟고, 산에 오르고, 나들이 합니다</li>
+          <li>아이들이 스스로 결정하는 회의를 합니다</li>
+          <li>방학에도 온종일 함께합니다 (오전 9시 ~ 오후 7시)</li>
+          <li>부모도 조합원으로 함께 운영합니다</li>
+        </ul>
+
+        <div class="section-title">모집 대상</div>
+        <div class="target-box">
+          <div>
+            <div class="label">모집 대상</div>
+            <div class="value">예비초등 1학년 ~ 초등 3학년 가족</div>
+          </div>
+          <div style="font-size: 26px; opacity: 0.45;">🌱</div>
+        </div>
+
+        <div class="section-title">찾아오세요</div>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">위치</div>
+            <div class="info-value">성남시 분당구<br>발이봉남로 12번길 21 1층</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">문의</div>
+            <div class="info-value">010-8990-1895<br>(홍보소위 연두)</div>
+          </div>
+          <div class="info-item" style="grid-column: 1 / -1;">
+            <div class="info-label">네이버 카페</div>
+            <div class="info-value">cafe.naver.com/ydafterschool</div>
+          </div>
+        </div>
+
+        <div class="bottom-bar">
+          <div class="brand">
+            공동육아 율동방과후
+            <span>협동돌봄센터 · 2001 ~</span>
+          </div>
+          <div class="badge">전국 협동돌봄센터 6호</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const POSTER_W = 595;
+    const POSTER_H = 842;
+
+    function scalePoster() {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const padding = 24;
+
+      const poster = document.querySelector('.poster');
+      const actualH = poster.offsetHeight; // 실제 렌더링된 높이
+
+      const scaleX = (vw - padding * 2) / POSTER_W;
+      const scaleY = (vh - padding * 2) / actualH;
+      const scale = Math.min(scaleX, scaleY);
+
+      const wrapper = document.getElementById('scaleWrapper');
+      wrapper.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    }
+
+    // 폰트 로드 완료 후 정확한 높이로 재계산
+    document.fonts.ready.then(() => {
+      scalePoster();
+    });
+    window.addEventListener('resize', scalePoster);
+  </script>
+</body>
+</html>
