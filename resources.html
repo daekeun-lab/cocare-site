@@ -227,7 +227,7 @@
 <body>
 
 <!-- ① 잠금 화면 -->
-<div id="lock-screen" class="overlay">
+<div id="lock-screen" style="position:fixed;inset:0;background:#fdf8f2;z-index:900;display:flex;align-items:center;justify-content:center;">
   <div class="modal-box">
     <div class="icon">🔒</div>
     <h2>자료실</h2>
@@ -240,7 +240,7 @@
 </div>
 
 <!-- ② GitHub 토큰 설정 -->
-<div id="token-setup" class="overlay" style="display:none">
+<div id="token-setup" style="position:fixed;inset:0;background:#fdf8f2;z-index:900;display:none;align-items:center;justify-content:center;">
   <div class="modal-box">
     <div class="icon">🔑</div>
     <h2>GitHub 연결 설정</h2>
@@ -257,7 +257,7 @@
 </div>
 
 <!-- ③ 로딩 -->
-<div id="loading-screen" class="overlay" style="display:none">
+<div id="loading-screen" style="position:fixed;inset:0;background:#fdf8f2;z-index:900;display:none;align-items:center;justify-content:center;">
   <div class="modal-box">
     <div class="spinner"></div>
     <p style="color: var(--text-soft); font-size:0.9rem">파일 목록을 불러오는 중...</p>
@@ -380,10 +380,20 @@
   // ───────────────────────────
   // ① 잠금 화면
   // ───────────────────────────
+  // 혹시 모를 오류 시 잠금화면 복구
+  window.onerror = function() {
+    document.getElementById('lock-screen').style.display = 'flex';
+    document.getElementById('loading-screen').style.display = 'none';
+  };
+
   (function() {
-    if (sessionStorage.getItem('cocare_resources') === 'ok') {
-      document.getElementById('lock-screen').style.display = 'none';
-      initApp();
+    try {
+      if (sessionStorage.getItem('cocare_resources') === 'ok') {
+        document.getElementById('lock-screen').style.display = 'none';
+        initApp();
+      }
+    } catch(e) {
+      console.error('init error:', e);
     }
   })();
 
@@ -423,10 +433,15 @@
   // ③ 초기화 & 파일 로딩
   // ───────────────────────────
   function initApp() {
-    if (!getToken()) {
-      document.getElementById('token-setup').style.display = 'flex';
-    } else {
-      loadFiles();
+    try {
+      if (!getToken()) {
+        document.getElementById('token-setup').style.display = 'flex';
+      } else {
+        loadFiles();
+      }
+    } catch(e) {
+      console.error('initApp error:', e);
+      document.getElementById('lock-screen').style.display = 'flex';
     }
   }
 
@@ -441,12 +456,17 @@
     document.getElementById('loading-screen').style.display = 'flex';
     document.getElementById('main-content').style.display = 'none';
 
-    const all = {};
-    for (const cat of Object.keys(CATS)) {
-      const r = await ghFetch(`${FILES_BASE}/${cat}`).catch(() => null);
-      all[cat] = (r && r.ok) ? (await r.json()).filter(f => f.type === 'file') : [];
+    try {
+      const all = {};
+      for (const cat of Object.keys(CATS)) {
+        const r = await ghFetch(`${FILES_BASE}/${cat}`).catch(() => null);
+        all[cat] = (r && r.ok) ? (await r.json()).filter(f => f.type === 'file') : [];
+      }
+      renderFiles(all);
+    } catch(e) {
+      console.error('loadFiles error:', e);
+      showToast('파일 목록을 불러오지 못했습니다', true);
     }
-    renderFiles(all);
 
     document.getElementById('loading-screen').style.display = 'none';
     document.getElementById('main-content').style.display = 'block';
