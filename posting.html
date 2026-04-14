@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>포스팅 업로드 — cocare.kr</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .upload-card {
+      background: white; border-radius: 20px;
+      border: 1px solid var(--green-mid); overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .upload-card-header {
+      background: var(--green-light); padding: 20px 24px;
+      border-bottom: 1px solid var(--green-mid);
+    }
+    .upload-card-header h3 { font-size: 1rem; font-weight: 700; color: var(--green); }
+    .upload-card-header p { font-size: 0.85rem; color: var(--text-soft); margin-top: 4px; }
+    .upload-card-body { padding: 24px; }
+
+    .upload-zone {
+      border: 2px dashed var(--green-mid); border-radius: 14px;
+      padding: 40px 24px; text-align: center; cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .upload-zone:hover, .upload-zone.drag-over {
+      border-color: var(--green); background: var(--green-light);
+    }
+    .upload-zone .icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .upload-zone p { font-size: 0.9rem; color: var(--text-soft); }
+    .upload-zone strong { color: var(--green); }
+
+    .category-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 20px 0;
+    }
+    .cat-btn {
+      padding: 14px 10px; border: 2px solid var(--green-mid);
+      border-radius: 12px; background: white; cursor: pointer;
+      text-align: center; font-family: inherit; transition: all 0.15s;
+    }
+    .cat-btn:hover { border-color: var(--green); background: var(--green-light); }
+    .cat-btn.selected { border-color: var(--green); background: var(--green-light); font-weight: 700; color: var(--green); }
+    .cat-btn .cat-icon { font-size: 1.5rem; display: block; margin-bottom: 6px; }
+    .cat-btn .cat-name { font-size: 0.88rem; }
+
+    .memo-input {
+      width: 100%; padding: 12px 16px;
+      border: 2px solid var(--green-mid); border-radius: 10px;
+      font-size: 0.9rem; font-family: inherit; outline: none;
+      resize: vertical; min-height: 80px; margin-top: 8px;
+    }
+    .memo-input:focus { border-color: var(--green); }
+
+    .file-preview {
+      display: none; background: var(--green-light);
+      border-radius: 12px; padding: 14px 18px;
+      margin-top: 14px; align-items: center; gap: 12px;
+    }
+    .file-preview.show { display: flex; }
+    .file-preview .file-icon { font-size: 1.8rem; flex-shrink: 0; }
+    .file-preview .file-info .name { font-size: 0.9rem; font-weight: 600; word-break: break-all; }
+    .file-preview .file-info .size { font-size: 0.78rem; color: var(--text-soft); margin-top: 2px; }
+
+    .submit-btn {
+      width: 100%; padding: 14px;
+      background: var(--green); color: white;
+      border: none; border-radius: 12px;
+      font-size: 1rem; font-weight: 700;
+      cursor: pointer; margin-top: 8px;
+    }
+    .submit-btn:hover { opacity: 0.9; }
+    .submit-btn:disabled { opacity: 0.4; cursor: default; }
+
+    .progress-bar { height: 5px; background: var(--green-mid); border-radius: 3px; margin: 12px 0; display: none; }
+    .progress-fill { height: 100%; background: var(--green); border-radius: 3px; width: 0; transition: width 0.4s; }
+
+    /* 완료 화면 */
+    .success-box {
+      display: none; text-align: center;
+      background: white; border-radius: 20px; padding: 48px 32px;
+      border: 1px solid var(--green-mid);
+    }
+    .success-box .icon { font-size: 3rem; margin-bottom: 16px; }
+    .success-box h2 { font-size: 1.3rem; margin-bottom: 10px; }
+    .success-box p { font-size: 0.9rem; color: var(--text-soft); margin-bottom: 24px; line-height: 1.7; }
+    .success-box a {
+      display: inline-block; background: var(--green); color: white;
+      padding: 12px 28px; border-radius: 24px; text-decoration: none;
+      font-weight: 700; font-size: 0.9rem; margin: 4px;
+    }
+
+    /* PAT 설정 */
+    .token-overlay {
+      position: fixed; inset: 0; background: #fdf8f2;
+      z-index: 800; display: none; align-items: center; justify-content: center;
+    }
+    .token-box {
+      background: white; border-radius: 20px; padding: 44px 36px;
+      text-align: center; border: 1px solid #c5d9c9; max-width: 360px; width: 90%;
+    }
+    .token-hint {
+      font-size: 0.78rem; color: var(--text-soft);
+      background: var(--green-light); border-radius: 8px;
+      padding: 12px; text-align: left; line-height: 1.7; margin-bottom: 14px;
+    }
+    .token-input {
+      width: 100%; padding: 10px 14px;
+      border: 2px solid var(--green-mid); border-radius: 10px;
+      font-size: 0.82rem; font-family: monospace; outline: none; margin-bottom: 12px;
+    }
+    .token-input:focus { border-color: var(--green); }
+
+    /* 토스트 */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: var(--green); color: white; padding: 12px 24px;
+      border-radius: 24px; font-size: 0.88rem; font-weight: 600;
+      z-index: 1000; opacity: 0; transition: opacity 0.3s; white-space: nowrap;
+    }
+    .toast.show { opacity: 1; }
+    .toast.error { background: #c0392b; }
+  </style>
+</head>
+<body>
+
+<!-- GitHub 토큰 설정 -->
+<div class="token-overlay" id="token-overlay">
+  <div class="token-box">
+    <div style="font-size:2.4rem;margin-bottom:14px;">🔑</div>
+    <h2 style="font-size:1.15rem;margin-bottom:8px;">GitHub 연결 설정</h2>
+    <p style="font-size:0.88rem;color:#5a5a5a;margin-bottom:18px;">파일 업로드를 위해<br>GitHub Personal Access Token이 필요합니다</p>
+    <div class="token-hint">
+      github.com → Settings → Developer settings<br>
+      → Personal access tokens → Tokens (classic)<br>
+      → <strong>repo</strong> 권한 선택 후 토큰 복사
+    </div>
+    <input type="password" class="token-input" id="gh-token" placeholder="ghp_xxxxxxxxxxxx">
+    <button onclick="saveToken()"
+      style="width:100%;padding:12px;background:#4a7c59;color:white;border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;">
+      연결하기
+    </button>
+    <div id="token-error" style="font-size:0.82rem;color:#c0392b;margin-top:8px;display:none;">토큰이 올바르지 않습니다</div>
+  </div>
+</div>
+
+<nav>
+  <a href="index.html" class="nav-logo">cocare.kr</a>
+  <ul class="nav-links">
+    <li><a href="index.html">소개</a></li>
+    <li><a href="news.html">소식</a></li>
+    <li><a href="activities.html">활동</a></li>
+    <li><a href="resources.html">자료실</a></li>
+    <li><a href="index.html#recruit">조합원 모집</a></li>
+  </ul>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <div class="section-label">Posting</div>
+    <h1>포스팅 업로드</h1>
+  </div>
+</div>
+
+<section>
+  <div class="container">
+
+    <!-- 안내 -->
+    <div style="background:var(--green-light);border-radius:14px;padding:18px 22px;margin-bottom:28px;font-size:0.9rem;line-height:1.8;color:var(--text-soft);">
+      파일을 올리고 카테고리를 선택하면 <strong style="color:var(--green)">관리자가 내용을 분석해서 홈페이지에 포스팅</strong>합니다.<br>
+      스크린샷 이미지, 사진, 문서 등 어떤 형식이든 가능합니다.
+    </div>
+
+    <!-- 업로드 폼 -->
+    <div id="upload-form">
+
+      <div class="upload-card">
+        <div class="upload-card-header">
+          <h3>① 파일 선택</h3>
+          <p>이미지, 스크린샷, 문서 등 모든 파일 가능</p>
+        </div>
+        <div class="upload-card-body">
+          <div class="upload-zone" id="upload-zone"
+            onclick="document.getElementById('file-input').click()"
+            ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
+            <div class="icon">📎</div>
+            <p><strong>파일을 드래그</strong>하거나 클릭해서 선택</p>
+            <p style="font-size:0.78rem;margin-top:4px">JPG, PNG, PDF, PPT, 스크린샷 등</p>
+          </div>
+          <input type="file" id="file-input" style="display:none" onchange="onFileSelect(event)">
+          <div class="file-preview" id="file-preview">
+            <div class="file-icon" id="preview-icon">📄</div>
+            <div class="file-info">
+              <div class="name" id="preview-name"></div>
+              <div class="size" id="preview-size"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="upload-card">
+        <div class="upload-card-header">
+          <h3>② 어디에 올릴까요?</h3>
+          <p>이 내용이 홈페이지 어느 섹션에 올라갈지 선택해주세요</p>
+        </div>
+        <div class="upload-card-body">
+          <div class="category-grid">
+            <button class="cat-btn" data-cat="소식" onclick="selectCat(this)">
+              <span class="cat-icon">📢</span>
+              <span class="cat-name">소식 & 공지</span>
+            </button>
+            <button class="cat-btn" data-cat="활동" onclick="selectCat(this)">
+              <span class="cat-icon">🌿</span>
+              <span class="cat-name">활동 기록</span>
+            </button>
+            <button class="cat-btn" data-cat="소개" onclick="selectCat(this)">
+              <span class="cat-icon">🏠</span>
+              <span class="cat-name">율동방과후 소개</span>
+            </button>
+            <button class="cat-btn" data-cat="자료실" onclick="selectCat(this)">
+              <span class="cat-icon">📁</span>
+              <span class="cat-name">자료실</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="upload-card">
+        <div class="upload-card-header">
+          <h3>③ 메모 (선택)</h3>
+          <p>내용 설명이나 포스팅 방향을 적어주시면 더 정확하게 반영돼요</p>
+        </div>
+        <div class="upload-card-body">
+          <textarea class="memo-input" id="memo" placeholder="예) 4월 봄 나들이 사진입니다. 활동 페이지에 올려주세요."></textarea>
+        </div>
+      </div>
+
+      <div class="progress-bar" id="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+
+      <button class="submit-btn" id="submit-btn" onclick="doUpload()">업로드하기</button>
+
+    </div>
+
+    <!-- 완료 화면 -->
+    <div class="success-box" id="success-box">
+      <div class="icon">✅</div>
+      <h2>업로드 완료!</h2>
+      <p>파일이 성공적으로 전송되었습니다.<br>
+        관리자가 내용을 확인하고 <strong>홈페이지에 포스팅</strong>해드릴게요.<br>
+        보통 당일 내로 반영됩니다.</p>
+      <a href="index.html">홈으로</a>
+      <a href="javascript:location.reload()">추가 업로드</a>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <ul class="footer-links">
+    <li><a href="index.html">소개</a></li>
+    <li><a href="news.html">소식</a></li>
+    <li><a href="activities.html">활동</a></li>
+    <li><a href="resources.html">자료실</a></li>
+  </ul>
+  <strong>cocare.kr</strong> · 율동방과후 협동돌봄센터<br>
+  <span style="font-size:0.8rem;margin-top:6px;display:block;">성남시 분당구 · 전국 협동돌봄센터 6호</span>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const REPO   = 'daekeun-lab/cocare-site';
+  const BRANCH = 'main';
+  const getToken = () => localStorage.getItem('gh_pat');
+
+  let selectedFile = null;
+  let selectedCat  = null;
+
+  // 토큰 확인
+  window.addEventListener('load', () => {
+    if (!getToken()) {
+      document.getElementById('token-overlay').style.display = 'flex';
+    }
+  });
+
+  async function saveToken() {
+    const token = document.getElementById('gh-token').value.trim();
+    if (!token) return;
+    const ok = await fetch(`https://api.github.com/repos/${REPO}`, {
+      headers: { Authorization: `token ${token}` }
+    }).then(r => r.ok).catch(() => false);
+    if (ok) {
+      localStorage.setItem('gh_pat', token);
+      document.getElementById('token-overlay').style.display = 'none';
+    } else {
+      document.getElementById('token-error').style.display = 'block';
+    }
+  }
+
+  // 파일 선택
+  const onDragOver  = e => { e.preventDefault(); document.getElementById('upload-zone').classList.add('drag-over'); };
+  const onDragLeave = () => document.getElementById('upload-zone').classList.remove('drag-over');
+  const onDrop = e => { e.preventDefault(); onDragLeave(); const f = e.dataTransfer.files[0]; if (f) setFile(f); };
+  const onFileSelect = e => { const f = e.target.files[0]; if (f) setFile(f); e.target.value = ''; };
+
+  const EXT_ICON = { pdf:'📕', ppt:'📊', pptx:'📊', doc:'📝', docx:'📝', hwp:'📝',
+    jpg:'🖼️', jpeg:'🖼️', png:'🖼️', gif:'🖼️', webp:'🖼️', heic:'🖼️', html:'🌐' };
+  const fmtSize = b => b < 1024 ? `${b} B` : b < 1048576 ? `${(b/1024).toFixed(1)} KB` : `${(b/1048576).toFixed(1)} MB`;
+
+  function setFile(file) {
+    selectedFile = file;
+    const ext = file.name.split('.').pop().toLowerCase();
+    document.getElementById('preview-icon').textContent = EXT_ICON[ext] || '📎';
+    document.getElementById('preview-name').textContent = file.name;
+    document.getElementById('preview-size').textContent = fmtSize(file.size);
+    document.getElementById('file-preview').classList.add('show');
+  }
+
+  function selectCat(btn) {
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedCat = btn.dataset.cat;
+  }
+
+  async function doUpload() {
+    if (!selectedFile) { showToast('파일을 선택해주세요', true); return; }
+    if (!selectedCat)  { showToast('카테고리를 선택해주세요', true); return; }
+
+    const btn  = document.getElementById('submit-btn');
+    const fill = document.getElementById('progress-fill');
+    btn.disabled = true; btn.textContent = '업로드 중...';
+    document.getElementById('progress-bar').style.display = 'block';
+    fill.style.width = '20%';
+
+    try {
+      const base64 = await new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = e => res(e.target.result.split(',')[1]);
+        r.onerror = rej;
+        r.readAsDataURL(selectedFile);
+      });
+      fill.style.width = '60%';
+
+      const memo  = document.getElementById('memo').value.trim();
+      const ts    = new Date().toISOString().slice(0, 16).replace('T', '_').replace(':', '-');
+      const fname = `${ts}_${selectedFile.name}`;
+      const path  = `uploads/pending/${selectedCat}/${fname}`;
+
+      // 파일 업로드
+      const resp = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
+        method: 'PUT',
+        headers: { Authorization: `token ${getToken()}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: `포스팅 업로드: [${selectedCat}] ${selectedFile.name}`,
+          content: base64,
+          branch: BRANCH,
+        }),
+      });
+      fill.style.width = '80%';
+
+      // 메모가 있으면 함께 저장
+      if (memo) {
+        const memoPath = path.replace(/\.[^.]+$/, '') + '_메모.txt';
+        await fetch(`https://api.github.com/repos/${REPO}/contents/${memoPath}`, {
+          method: 'PUT',
+          headers: { Authorization: `token ${getToken()}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: `포스팅 메모: [${selectedCat}] ${selectedFile.name}`,
+            content: btoa(unescape(encodeURIComponent(`카테고리: ${selectedCat}\n파일: ${selectedFile.name}\n\n${memo}`))),
+            branch: BRANCH,
+          }),
+        });
+      }
+
+      fill.style.width = '100%';
+
+      if (resp.ok) {
+        document.getElementById('upload-form').style.display = 'none';
+        document.getElementById('success-box').style.display = 'block';
+      } else {
+        const err = await resp.json().catch(() => ({}));
+        showToast(err.message || '업로드 실패', true);
+        btn.disabled = false; btn.textContent = '업로드하기';
+      }
+    } catch(e) {
+      showToast('업로드 중 오류가 발생했습니다', true);
+      btn.disabled = false; btn.textContent = '업로드하기';
+    }
+  }
+
+  function showToast(msg, isError = false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `toast${isError ? ' error' : ''} show`;
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+</script>
+
+</body>
+</html>
