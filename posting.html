@@ -248,10 +248,20 @@
       <div class="icon">✅</div>
       <h2>업로드 완료!</h2>
       <p>파일이 성공적으로 전송되었습니다.<br>
-        관리자가 내용을 확인하고 <strong>홈페이지에 포스팅</strong>해드릴게요.<br>
-        보통 당일 내로 반영됩니다.</p>
-      <a href="index.html">홈으로</a>
-      <a href="javascript:location.reload()">추가 업로드</a>
+        아래 버튼을 눌러 관리자에게 알림을 보내주세요.</p>
+
+      <button id="notify-btn" onclick="sendNotify()"
+        style="width:100%;padding:14px;background:#4a7c59;color:white;border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;margin-bottom:12px;">
+        📣 관리자에게 알림 보내기
+      </button>
+      <div id="notify-done" style="display:none;background:#e8f0eb;border-radius:10px;padding:12px;font-size:0.88rem;color:#4a7c59;font-weight:600;margin-bottom:12px;">
+        ✅ 알림 전송 완료! 곧 포스팅됩니다.
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:4px;">
+        <a href="index.html" style="flex:1;text-align:center;background:white;color:#4a7c59;padding:12px;border-radius:24px;text-decoration:none;font-weight:700;font-size:0.88rem;border:2px solid #4a7c59;">홈으로</a>
+        <a href="javascript:location.reload()" style="flex:1;text-align:center;background:white;color:#5a5a5a;padding:12px;border-radius:24px;text-decoration:none;font-weight:700;font-size:0.88rem;border:2px solid #c5d9c9;">추가 업로드</a>
+      </div>
     </div>
 
   </div>
@@ -387,6 +397,34 @@
     } catch(e) {
       showToast('업로드 중 오류가 발생했습니다', true);
       btn.disabled = false; btn.textContent = '업로드하기';
+    }
+  }
+
+  async function sendNotify() {
+    const btn = document.getElementById('notify-btn');
+    btn.disabled = true;
+    btn.textContent = '전송 중...';
+
+    const memo = document.getElementById('memo').value.trim();
+    const msg = [
+      `📬 cocare.kr 포스팅 요청`,
+      `카테고리: ${selectedCat}`,
+      `파일: ${selectedFile ? selectedFile.name : ''}`,
+      memo ? `메모: ${memo}` : ''
+    ].filter(Boolean).join('\n');
+
+    try {
+      await fetch('https://ntfy.sh/gola-claude-alerts', {
+        method: 'POST',
+        body: msg,
+        headers: { 'Title': 'cocare 포스팅 요청', 'Priority': 'high', 'Tags': 'mega' }
+      });
+      btn.style.display = 'none';
+      document.getElementById('notify-done').style.display = 'block';
+    } catch {
+      btn.disabled = false;
+      btn.textContent = '📣 관리자에게 알림 보내기';
+      showToast('알림 전송 실패, 다시 시도해주세요', true);
     }
   }
 
