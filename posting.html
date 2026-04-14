@@ -120,6 +120,26 @@
     }
     .toast.show { opacity: 1; }
     .toast.error { background: #c0392b; }
+
+    /* 입력 탭 */
+    .input-tabs {
+      display: flex; gap: 0; margin-bottom: 16px;
+      border: 2px solid var(--green-mid); border-radius: 10px; overflow: hidden;
+    }
+    .input-tab {
+      flex: 1; padding: 10px; background: white; border: none;
+      font-family: inherit; font-size: 0.9rem; cursor: pointer;
+      transition: background 0.15s; color: var(--text-soft); font-weight: 600;
+    }
+    .input-tab.active { background: var(--green); color: white; }
+
+    .link-input {
+      width: 100%; padding: 14px 16px;
+      border: 2px solid var(--green-mid); border-radius: 12px;
+      font-size: 0.92rem; font-family: inherit; outline: none;
+    }
+    .link-input:focus { border-color: var(--green); }
+    .link-input::placeholder { color: #aaa; }
   </style>
 </head>
 <body>
@@ -176,24 +196,42 @@
 
       <div class="upload-card">
         <div class="upload-card-header">
-          <h3>① 파일 선택</h3>
-          <p>이미지, 스크린샷, 문서 등 모든 파일 가능</p>
+          <h3>① 콘텐츠 선택</h3>
+          <p>파일 또는 링크(URL) 중 하나를 올려주세요</p>
         </div>
         <div class="upload-card-body">
-          <div class="upload-zone" id="upload-zone"
-            onclick="document.getElementById('file-input').click()"
-            ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
-            <div class="icon">📎</div>
-            <p><strong>파일을 드래그</strong>하거나 클릭해서 선택</p>
-            <p style="font-size:0.78rem;margin-top:4px">JPG, PNG, PDF, PPT, 스크린샷 등</p>
+          <div class="input-tabs">
+            <button class="input-tab active" id="tab-file" onclick="switchTab('file')">📎 파일 업로드</button>
+            <button class="input-tab" id="tab-link" onclick="switchTab('link')">🔗 링크 입력</button>
           </div>
-          <input type="file" id="file-input" style="display:none" onchange="onFileSelect(event)">
-          <div class="file-preview" id="file-preview">
-            <div class="file-icon" id="preview-icon">📄</div>
-            <div class="file-info">
-              <div class="name" id="preview-name"></div>
-              <div class="size" id="preview-size"></div>
+
+          <!-- 파일 업로드 영역 -->
+          <div id="file-section">
+            <div class="upload-zone" id="upload-zone"
+              onclick="document.getElementById('file-input').click()"
+              ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
+              <div class="icon">📎</div>
+              <p><strong>파일을 드래그</strong>하거나 클릭해서 선택</p>
+              <p style="font-size:0.78rem;margin-top:4px">JPG, PNG, PDF, PPT, 스크린샷 등</p>
             </div>
+            <input type="file" id="file-input" style="display:none" onchange="onFileSelect(event)">
+            <div class="file-preview" id="file-preview">
+              <div class="file-icon" id="preview-icon">📄</div>
+              <div class="file-info">
+                <div class="name" id="preview-name"></div>
+                <div class="size" id="preview-size"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 링크 입력 영역 -->
+          <div id="link-section" style="display:none">
+            <input type="url" class="link-input" id="link-url"
+              placeholder="https://cafe.naver.com/... 또는 다른 URL">
+            <p style="font-size:0.8rem;color:var(--text-soft);margin-top:10px;line-height:1.6;">
+              뉴스 기사, 네이버 카페 글, SNS 게시물 등의 URL을 붙여넣으세요.<br>
+              아래 메모란에 포스팅 방향을 적어주시면 더 정확하게 반영됩니다.
+            </p>
           </div>
         </div>
       </div>
@@ -287,6 +325,15 @@
 
   let selectedFile = null;
   let selectedCat  = null;
+  let inputMode    = 'file'; // 'file' or 'link'
+
+  function switchTab(mode) {
+    inputMode = mode;
+    document.getElementById('tab-file').classList.toggle('active', mode === 'file');
+    document.getElementById('tab-link').classList.toggle('active', mode === 'link');
+    document.getElementById('file-section').style.display = mode === 'file' ? 'block' : 'none';
+    document.getElementById('link-section').style.display = mode === 'link' ? 'block' : 'none';
+  }
 
   // 토큰 확인
   window.addEventListener('load', () => {
@@ -335,9 +382,20 @@
   }
 
   async function doUpload() {
-    if (!selectedFile) { showToast('파일을 선택해주세요', true); return; }
-    if (!selectedCat)  { showToast('카테고리를 선택해주세요', true); return; }
+    if (!selectedCat) { showToast('카테고리를 선택해주세요', true); return; }
 
+    if (inputMode === 'file') {
+      if (!selectedFile) { showToast('파일을 선택해주세요', true); return; }
+      await doFileUpload();
+    } else {
+      const url = document.getElementById('link-url').value.trim();
+      if (!url) { showToast('URL을 입력해주세요', true); return; }
+      if (!url.startsWith('http')) { showToast('올바른 URL을 입력해주세요', true); return; }
+      await doLinkUpload(url);
+    }
+  }
+
+  async function doFileUpload() {
     const btn  = document.getElementById('submit-btn');
     const fill = document.getElementById('progress-fill');
     btn.disabled = true; btn.textContent = '업로드 중...';
@@ -358,7 +416,6 @@
       const fname = `${ts}_${selectedFile.name}`;
       const path  = `uploads/pending/${selectedCat}/${fname}`;
 
-      // 파일 업로드
       const resp = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
         method: 'PUT',
         headers: { Authorization: `token ${getToken()}`, 'Content-Type': 'application/json' },
@@ -370,7 +427,6 @@
       });
       fill.style.width = '80%';
 
-      // 메모가 있으면 함께 저장
       if (memo) {
         const memoPath = path.replace(/\.[^.]+$/, '') + '_메모.txt';
         await fetch(`https://api.github.com/repos/${REPO}/contents/${memoPath}`, {
@@ -400,16 +456,64 @@
     }
   }
 
+  async function doLinkUpload(url) {
+    const btn  = document.getElementById('submit-btn');
+    const fill = document.getElementById('progress-fill');
+    btn.disabled = true; btn.textContent = '전송 중...';
+    document.getElementById('progress-bar').style.display = 'block';
+    fill.style.width = '40%';
+
+    try {
+      const memo = document.getElementById('memo').value.trim();
+      const ts   = new Date().toISOString().slice(0, 16).replace('T', '_').replace(':', '-');
+      const safeUrl = url.replace(/[^a-zA-Z0-9가-힣._-]/g, '_').slice(0, 60);
+      const fname = `${ts}_링크_${safeUrl}.url.txt`;
+      const path  = `uploads/pending/${selectedCat}/${fname}`;
+
+      const content = [
+        `URL: ${url}`,
+        `카테고리: ${selectedCat}`,
+        memo ? `메모: ${memo}` : ''
+      ].filter(Boolean).join('\n');
+
+      fill.style.width = '70%';
+
+      const resp = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
+        method: 'PUT',
+        headers: { Authorization: `token ${getToken()}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: `포스팅 업로드: [${selectedCat}] 링크`,
+          content: btoa(unescape(encodeURIComponent(content))),
+          branch: BRANCH,
+        }),
+      });
+      fill.style.width = '100%';
+
+      if (resp.ok) {
+        document.getElementById('upload-form').style.display = 'none';
+        document.getElementById('success-box').style.display = 'block';
+      } else {
+        const err = await resp.json().catch(() => ({}));
+        showToast(err.message || '전송 실패', true);
+        btn.disabled = false; btn.textContent = '업로드하기';
+      }
+    } catch(e) {
+      showToast('전송 중 오류가 발생했습니다', true);
+      btn.disabled = false; btn.textContent = '업로드하기';
+    }
+  }
+
   async function sendNotify() {
     const btn = document.getElementById('notify-btn');
     btn.disabled = true;
     btn.textContent = '전송 중...';
 
     const memo = document.getElementById('memo').value.trim();
+    const linkUrl = document.getElementById('link-url').value.trim();
     const msg = [
       `📬 cocare.kr 포스팅 요청`,
       `카테고리: ${selectedCat}`,
-      `파일: ${selectedFile ? selectedFile.name : ''}`,
+      inputMode === 'link' ? `링크: ${linkUrl}` : `파일: ${selectedFile ? selectedFile.name : ''}`,
       memo ? `메모: ${memo}` : ''
     ].filter(Boolean).join('\n');
 
