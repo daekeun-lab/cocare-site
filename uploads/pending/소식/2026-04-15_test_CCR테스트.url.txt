@@ -1,4 +1,0 @@
-URL: https://cocare.kr
-카테고리: 소식
-
-CCR 자동화 테스트
