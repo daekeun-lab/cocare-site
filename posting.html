@@ -518,11 +518,10 @@
     ].filter(Boolean).join('\n');
 
     try {
-      await fetch('https://ntfy.sh/gola-claude-alerts', {
+      await fetch('/notify.php', {
         method: 'POST',
-        mode: 'no-cors',
-        body: msg,
-        headers: { 'Title': 'cocare 포스팅 요청', 'Priority': 'high', 'Tags': 'mega' }
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: msg, title: 'cocare 포스팅 요청', tags: 'mega' })
       });
     } catch {}
     btn.style.display = 'none';
