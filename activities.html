@@ -71,6 +71,33 @@
     .activity-content h4 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
     .activity-content p { font-size: 0.9rem; color: var(--text-soft); }
 
+    /* 사진 카드 (세로 레이아웃) */
+    .photo-card {
+      background: white;
+      border-radius: 16px;
+      border: 1px solid var(--green-mid);
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .photo-card img {
+      width: 100%;
+      display: block;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+    }
+    .photo-card .photo-info {
+      padding: 14px 16px;
+    }
+    .photo-card .photo-info h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .photo-card .photo-info p {
+      font-size: 0.82rem;
+      color: var(--text-soft);
+    }
+
     .empty-state {
       text-align: center;
       padding: 48px 24px;
@@ -108,9 +135,9 @@
     <!-- 사진 갤러리 -->
     <div class="activity-section">
       <h3>사진 갤러리</h3>
-      <div class="activity-card">
-        <img src="uploads/done/활동/2026-04-15_01-36_IMG_8961.jpeg" alt="우리들의 독서모임" style="width:100%;border-radius:8px;margin-bottom:10px;">
-        <div class="activity-content">
+      <div class="photo-card">
+        <img src="uploads/done/활동/2026-04-15_01-36_IMG_8961.jpeg" alt="우리들의 독서모임">
+        <div class="photo-info">
           <h4>우리들의 독서모임</h4>
           <p>활동 기록</p>
         </div>
